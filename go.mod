@@ -1,3 +1,3 @@
-module github/zmajew/algoritam
+module github.com/zmajew/algoritam
 
 go 1.19
