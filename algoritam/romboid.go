@@ -10,7 +10,14 @@ type Romboid struct {
 	Yes      bool
 }
 
-func (a *Algoritam) NewRomboid(name string, previous Reference, f func(*Romboid), yesNext, noNext Reference) (*Romboid, error) {
+func (a *Algoritam) NewRomboid(name string, previous Reference, condition bool, yesNext, noNext Reference) (*Romboid, error) {
+	f := func(b *Romboid) {
+		if condition {
+			b.Next = b.NextYes
+		} else {
+			b.Next = b.NextNo
+		}
+	}
 	newRomb := &Romboid{
 		Name:     name,
 		Previous: previous,
