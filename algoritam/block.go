@@ -45,6 +45,19 @@ func (b *BlockStruct) Execute(Previous) {
 	// 		fmt.Printf("panic occurred: %s\n", err)
 	// 	}
 	// }()
+	defer func() {
+		fmt.Println(b.GetName())
+		var p Reference
+		if b.GetPrevious() != nil {
+			p = b.GetPrevious()
+		}
+		for {
+			if p.GetPrevious() != nil {
+				fmt.Println(p.GetName(), "<-")
+			}
+			p = p.GetPrevious()
+		}
+	}()
 	err := b.Func(b)
 	if err != nil {
 		b.Error = err
