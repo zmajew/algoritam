@@ -5,17 +5,10 @@ import (
 	"runtime/debug"
 )
 
-type Block interface {
-	Execute()
-	AddPrevious(d Previous)
-	GetName() string
-}
-
 type BlockFunc func(*BlockStruct) error
 
 type BlockStruct struct {
 	Name     string
-	Type     string
 	Previous Reference
 	Next     Reference
 	Func     BlockFunc
