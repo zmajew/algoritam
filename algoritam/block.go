@@ -2,7 +2,7 @@ package algoritam
 
 import (
 	"fmt"
-	"log"
+	"runtime/debug"
 )
 
 type Block interface {
@@ -14,12 +14,13 @@ type Block interface {
 type BlockFunc func(*BlockStruct) error
 
 type BlockStruct struct {
-	Name                string
-	Type                string
-	Previous            Reference
-	Next                Reference
-	Func                BlockFunc
-	Error               error
+	Name     string
+	Type     string
+	Previous Reference
+	Next     Reference
+	Func     BlockFunc
+	Error    error
+	// ReferenceAfterError defines the Reference that will be trigered on execution error
 	ReferenceAfterError Reference
 }
 
@@ -36,28 +37,17 @@ func (b *BlockStruct) GetType() string {
 }
 
 func (b *BlockStruct) Execute(Previous) {
-	// defer func() {
-	// 	if err := recover(); err != nil {
-	// 		if b == nil {
-	// 			fmt.Printf(`"Next" of "%s" blockStruc empty
-	// `)
-	// 		}
-	// 		fmt.Printf("panic occurred: %s\n", err)
-	// 	}
-	// }()
 	defer func() {
-		fmt.Println(b.GetName())
-		var p Reference
-		if b.GetPrevious() != nil {
-			p = b.GetPrevious()
-		}
-		for {
-			if p.GetPrevious() != nil {
-				fmt.Println(p.GetName(), "<-")
+		if err := recover(); err != nil {
+			b.Error = fmt.Errorf("%s \n %s", err, string(debug.Stack()))
+			if b.ReferenceAfterError != nil {
+				b.ReferenceAfterError.Execute(b)
+				return
 			}
-			p = p.GetPrevious()
+			panic(err)
 		}
 	}()
+
 	err := b.Func(b)
 	if err != nil {
 		b.Error = err
@@ -65,7 +55,7 @@ func (b *BlockStruct) Execute(Previous) {
 			b.ReferenceAfterError.Execute(b)
 			return
 		}
-		log.Fatal(err)
+		panic(err)
 	}
 	b.Next.Execute(b)
 }
