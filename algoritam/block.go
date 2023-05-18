@@ -19,8 +19,6 @@ type BlockStruct struct {
 	Previous            Reference
 	Next                Reference
 	Func                BlockFunc
-	Value               interface{}
-	Result              interface{}
 	Error               error
 	ReferenceAfterError Reference
 }
@@ -71,7 +69,7 @@ func (b *BlockStruct) AddPrevious(d Reference) {
 	b.Previous = d
 }
 
-func (a *Algoritam) NewBlock(previous, next Reference, name string, value interface{}, f BlockFunc, rae Reference) (*BlockStruct, error) {
+func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc, rae Reference) (*BlockStruct, error) {
 	if name == "" {
 		err := fmt.Errorf("cannot create block with empty string name")
 		return nil, err
@@ -81,7 +79,6 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, value interf
 		Name:                name,
 		Previous:            previous,
 		Func:                f,
-		Value:               value,
 		Next:                next,
 		ReferenceAfterError: rae,
 	}
@@ -138,15 +135,15 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, value interf
 	return block, a.add(block)
 }
 
-func (r *BlockStruct) FirstPreviousBlockResult() interface{} {
-	for {
-		block, ok := r.Previous.(*BlockStruct)
-		if ok {
-			return block.Result
-		}
-		romboid, ok := r.Previous.(*Romboid)
-		if ok {
-			return romboid.FirstPreviousBlockResult()
-		}
-	}
-}
+// func (r *BlockStruct) FirstPreviousBlockResult() interface{} {
+// 	for {
+// 		block, ok := r.Previous.(*BlockStruct)
+// 		if ok {
+// 			return block.Result
+// 		}
+// 		romboid, ok := r.Previous.(*Romboid)
+// 		if ok {
+// 			return romboid.FirstPreviousBlockResult()
+// 		}
+// 	}
+// }
