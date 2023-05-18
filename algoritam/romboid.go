@@ -1,28 +1,28 @@
 package algoritam
 
 type Romboid struct {
-	Name     string
-	Previous Reference
-	NextYes  Reference
-	NextNo   Reference
-	Next     Reference
-	Func     func(*Romboid)
-	Yes      bool
+	Name      string
+	Previous  Reference
+	NextYes   Reference
+	NextNo    Reference
+	Next      Reference
+	Condition func(*Romboid)
+	Yes       bool
 }
 
-func (a *Algoritam) NewRomboid(name string, previous Reference, condition bool, yesNext, noNext Reference) (*Romboid, error) {
+func (a *Algoritam) NewRomboid(name string, previous Reference, condition func() bool, yesNext, noNext Reference) (*Romboid, error) {
 	f := func(b *Romboid) {
-		if condition {
+		if condition() {
 			b.Next = b.NextYes
 		} else {
 			b.Next = b.NextNo
 		}
 	}
 	newRomb := &Romboid{
-		Name:     name,
-		Previous: previous,
-		NextYes:  yesNext,
-		Func:     f,
+		Name:      name,
+		Previous:  previous,
+		NextYes:   yesNext,
+		Condition: f,
 	}
 	romb, ok := previous.(*Romboid)
 	if ok {
@@ -43,7 +43,7 @@ func (a *Algoritam) NewRomboid(name string, previous Reference, condition bool, 
 }
 
 func (r *Romboid) Execute(p Previous) {
-	r.Func(r)
+	r.Condition(r)
 	r.Next.Execute(p)
 }
 
