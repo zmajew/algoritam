@@ -134,16 +134,3 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc,
 	}
 	return block, a.add(block)
 }
-
-// func (r *BlockStruct) FirstPreviousBlockResult() interface{} {
-// 	for {
-// 		block, ok := r.Previous.(*BlockStruct)
-// 		if ok {
-// 			return block.Result
-// 		}
-// 		romboid, ok := r.Previous.(*Romboid)
-// 		if ok {
-// 			return romboid.FirstPreviousBlockResult()
-// 		}
-// 	}
-// }

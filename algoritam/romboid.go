@@ -58,16 +58,3 @@ func (r *Romboid) GetType() string {
 func (r *Romboid) GetPrevious() Reference {
 	return r.Previous
 }
-
-// func (r *Romboid) FirstPreviousBlockResult() interface{} {
-// 	for {
-// 		block, ok := r.Previous.(*BlockStruct)
-// 		if ok {
-// 			return block.Result
-// 		}
-// 		romboid, ok := r.Previous.(*Romboid)
-// 		if ok {
-// 			return romboid.FirstPreviousBlockResult()
-// 		}
-// 	}
-// }

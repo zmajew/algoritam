@@ -45,16 +45,3 @@ func (e *EndStruct) GetType() string {
 func (e *EndStruct) GetPrevious() Reference {
 	return e.Previous
 }
-
-// func (r *EndStruct) FirstPreviousBlockResult() interface{} {
-// 	for {
-// 		block, ok := r.Previous.(*BlockStruct)
-// 		if ok {
-// 			return block.Result
-// 		}
-// 		romboid, ok := r.Previous.(*Romboid)
-// 		if ok {
-// 			return romboid.FirstPreviousBlockResult()
-// 		}
-// 	}
-// }
