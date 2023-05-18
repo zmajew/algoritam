@@ -48,6 +48,11 @@ func (a *Algoritam) add(element interface{}) error {
 			return fmt.Errorf("error: first element of the algoritam must be of type Block, it is %T", element)
 		}
 	}
+	err := a.checkName(element)
+	if err != nil {
+		return err
+	}
+
 	a.Elements = append(a.Elements, element)
 	return nil
 }
@@ -138,4 +143,40 @@ func (a *Algoritam) GetPrevious() Reference {
 
 func (a *Algoritam) GetType() string {
 	return "ALGORITAM"
+}
+
+func (a *Algoritam) getElemenType(element interface{}) string {
+	return fmt.Sprintf("%T", element)
+}
+
+func (a *Algoritam) checkName(newElement interface{}) error {
+	var elementName string
+	switch m := newElement.(type) {
+	case *BlockStruct:
+		elementName = m.GetName()
+	case *Romboid:
+		elementName = m.GetName()
+	case *EndStruct:
+		elementName = m.GetName()
+	}
+
+	newElementType := a.getElemenType(newElement)
+
+	for _, v := range a.Elements {
+		switch m := v.(type) {
+		case *BlockStruct:
+			if m.GetName() == elementName {
+				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+			}
+		case *Romboid:
+			if m.GetName() == elementName {
+				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+			}
+		case *EndStruct:
+			if m.GetName() == elementName {
+				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+			}
+		}
+	}
+	return nil
 }

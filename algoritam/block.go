@@ -132,5 +132,5 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc,
 	if err := a.add(block); err != nil {
 		return nil, err
 	}
-	return block, a.add(block)
+	return block, nil
 }
