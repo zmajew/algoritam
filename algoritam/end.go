@@ -1,5 +1,12 @@
 package algoritam
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/zmajew/zerr"
+)
+
 type EndFunc func(*EndStruct)
 
 type EndStruct struct {
@@ -8,7 +15,12 @@ type EndStruct struct {
 	Name     string
 }
 
-func (a *Algoritam) NewEnd(previous Reference, f EndFunc) (*EndStruct, error) {
+func (a *Algoritam) NewEnd(previous Reference, name string, f EndFunc) *EndStruct {
+	if name == "" {
+		err := fmt.Errorf("error: cannot create an End with empty string name")
+		zerr.Log(err, 2)
+		os.Exit(1)
+	}
 	endStruct := &EndStruct{
 		Previous: previous,
 		Func:     f,
@@ -24,10 +36,11 @@ func (a *Algoritam) NewEnd(previous Reference, f EndFunc) (*EndStruct, error) {
 		}
 	}
 	if err := a.add(endStruct); err != nil {
-		return nil, err
+		zerr.Log(err, 2)
+		os.Exit(1)
 	}
 
-	return endStruct, nil
+	return endStruct
 }
 
 func (e *EndStruct) Execute(p Previous) {

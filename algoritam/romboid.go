@@ -1,5 +1,12 @@
 package algoritam
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/zmajew/zerr"
+)
+
 type Romboid struct {
 	Name      string
 	Previous  Reference
@@ -10,7 +17,12 @@ type Romboid struct {
 	Yes       bool
 }
 
-func (a *Algoritam) NewRomboid(name string, previous Reference, condition func() bool, yesNext, noNext Reference) (*Romboid, error) {
+func (a *Algoritam) NewRomboid(name string, previous Reference, condition func() bool, yesNext, noNext Reference) *Romboid {
+	if name == "" {
+		err := fmt.Errorf("error: cannot create a Romboid with empty string name")
+		zerr.Log(err, 2)
+		os.Exit(1)
+	}
 	f := func(b *Romboid) {
 		if condition() {
 			b.Next = b.NextYes
@@ -36,10 +48,11 @@ func (a *Algoritam) NewRomboid(name string, previous Reference, condition func()
 	}
 
 	if err := a.add(newRomb); err != nil {
-		return nil, err
+		zerr.Log(err, 2)
+		os.Exit(1)
 	}
 
-	return newRomb, nil
+	return newRomb
 }
 
 func (r *Romboid) Execute(p Previous) {

@@ -2,7 +2,10 @@ package algoritam
 
 import (
 	"fmt"
+	"os"
 	"runtime/debug"
+
+	"github.com/zmajew/zerr"
 )
 
 type BlockFunc func(*BlockStruct) error
@@ -65,10 +68,11 @@ func (b *BlockStruct) AddPrevious(d Reference) {
 	b.Previous = d
 }
 
-func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc, rae Reference) (*BlockStruct, error) {
+func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc, rae Reference) *BlockStruct {
 	if name == "" {
-		err := fmt.Errorf("cannot create block with empty string name")
-		return nil, err
+		err := fmt.Errorf("error: cannot create a Block with empty string name")
+		zerr.Log(err, 2)
+		os.Exit(1)
 	}
 
 	block := &BlockStruct{
@@ -126,7 +130,8 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc,
 	}
 
 	if err := a.add(block); err != nil {
-		return nil, err
+		zerr.Log(err, 2)
+		os.Exit(1)
 	}
-	return block, nil
+	return block
 }
