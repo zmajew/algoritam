@@ -24,6 +24,7 @@ func (a *Algoritam) NewEnd(previous Reference, name string, f EndFunc) *EndStruc
 	endStruct := &EndStruct{
 		Previous: previous,
 		Func:     f,
+		Name:     name,
 	}
 	romb, ok := previous.(*Romboid)
 	if ok {
