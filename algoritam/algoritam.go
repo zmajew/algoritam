@@ -58,37 +58,37 @@ func (a *Algoritam) add(element interface{}) error {
 }
 
 func (a *Algoritam) Arange() {
-	for i, v := range a.Elements {
+	for i, thisElemntInterface := range a.Elements {
 		if i == 0 {
 			if a.First == nil {
-				s, _ := v.(*BlockStruct)
+				s, _ := thisElemntInterface.(*BlockStruct)
 				start := &StartStruct{
 					Next: s,
 				}
 				a.First = start
 			}
 		}
-		switch m := v.(type) {
+		switch thisElemntStruct := thisElemntInterface.(type) {
 		case *BlockStruct:
 			for _, k := range a.Elements {
-				switch m2 := k.(type) {
+				switch otherElement := k.(type) {
 				case *BlockStruct:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 
 				case *Romboid:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 				case *EndStruct:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 				case *StartStruct:
@@ -98,24 +98,24 @@ func (a *Algoritam) Arange() {
 
 		case *Romboid:
 			for _, k := range a.Elements {
-				switch m2 := k.(type) {
+				switch otherElement := k.(type) {
 				case *BlockStruct:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 
 				case *Romboid:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 				case *EndStruct:
-					if m2.Previous != nil {
-						if m2.Previous == v {
-							m.Next = m2
+					if otherElement.Previous != nil {
+						if otherElement.Previous == thisElemntInterface {
+							thisElemntStruct.Next = otherElement
 						}
 					}
 				case *StartStruct:
