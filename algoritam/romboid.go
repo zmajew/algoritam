@@ -17,7 +17,7 @@ type Romboid struct {
 	Yes       bool
 }
 
-func (a *Algoritam) NewRomboid(name string, previous Reference, condition func() bool, yesNext, noNext Reference) *Romboid {
+func (a *Algoritam) NewRomboid(previous Reference, name string, condition func() bool, yesNext, noNext Reference) *Romboid {
 	if name == "" {
 		err := fmt.Errorf("error: cannot create a Romboid with empty string name")
 		zerr.Log(err, 2)
@@ -34,6 +34,7 @@ func (a *Algoritam) NewRomboid(name string, previous Reference, condition func()
 		Name:      name,
 		Previous:  previous,
 		NextYes:   yesNext,
+		NextNo:    noNext,
 		Condition: f,
 	}
 	romb, ok := previous.(*Romboid)
