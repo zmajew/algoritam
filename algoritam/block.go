@@ -3,7 +3,9 @@ package algoritam
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"runtime/debug"
+	"strings"
 
 	"github.com/zmajew/zerr"
 )
@@ -11,11 +13,12 @@ import (
 type BlockFunc func(*BlockStruct) error
 
 type BlockStruct struct {
-	Name     string
-	Previous Reference
-	Next     Reference
-	Func     BlockFunc
-	Error    error
+	Name             string
+	Previous         Reference
+	Next             Reference
+	Func             BlockFunc
+	Error            error
+	creationCodeLine string
 	// ReferenceAfterError defines the Reference that will be trigered on execution error
 	ReferenceAfterError Reference
 }
@@ -75,12 +78,19 @@ func (a *Algoritam) NewBlock(previous, next Reference, name string, f BlockFunc,
 		os.Exit(1)
 	}
 
+	pc := make([]uintptr, 10)
+	fk := runtime.FuncForPC(pc[1] - 1)
+	osPath, _ := os.Getwd()
+	_, fn, line, _ := runtime.Caller(1)
+	fn = strings.TrimPrefix(fn, osPath)
+
 	block := &BlockStruct{
 		Name:                name,
 		Previous:            previous,
 		Func:                f,
 		Next:                next,
 		ReferenceAfterError: rae,
+		creationCodeLine:    fmt.Sprintf("%s %d, %s", fn, line, fk.Name()),
 	}
 
 	if rae == nil {

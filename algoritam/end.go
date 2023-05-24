@@ -3,6 +3,8 @@ package algoritam
 import (
 	"fmt"
 	"os"
+	"runtime"
+	"strings"
 
 	"github.com/zmajew/zerr"
 )
@@ -10,9 +12,10 @@ import (
 type EndFunc func(*EndStruct)
 
 type EndStruct struct {
-	Previous Reference
-	Func     EndFunc
-	Name     string
+	Previous         Reference
+	Func             EndFunc
+	Name             string
+	creationCodeLine string
 }
 
 func (a *Algoritam) NewEnd(previous Reference, name string, f EndFunc) *EndStruct {
@@ -21,10 +24,17 @@ func (a *Algoritam) NewEnd(previous Reference, name string, f EndFunc) *EndStruc
 		zerr.Log(err, 2)
 		os.Exit(1)
 	}
+
+	pc := make([]uintptr, 10)
+	fk := runtime.FuncForPC(pc[1] - 1)
+	osPath, _ := os.Getwd()
+	_, fn, line, _ := runtime.Caller(1)
+	fn = strings.TrimPrefix(fn, osPath)
 	endStruct := &EndStruct{
-		Previous: previous,
-		Func:     f,
-		Name:     name,
+		Previous:         previous,
+		Func:             f,
+		Name:             name,
+		creationCodeLine: fmt.Sprintf("%s %d, %s", fn, line, fk.Name()),
 	}
 	romb, ok := previous.(*Romboid)
 	if ok {

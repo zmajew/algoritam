@@ -1,6 +1,11 @@
 package algoritam
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"runtime"
+	"strings"
+)
 
 type Reference interface {
 	Execute(Previous)
@@ -23,17 +28,25 @@ type StartStruct struct {
 }
 
 type Algoritam struct {
-	Name     string
-	Previous Reference
-	Elements []interface{}
-	First    *StartStruct
+	Name             string
+	Previous         Reference
+	Elements         []interface{}
+	First            *StartStruct
+	creationCodeLine string
 }
 
 func NewAlgoritam(name string, previous Reference, first *StartStruct) *Algoritam {
+	pc := make([]uintptr, 10)
+	fk := runtime.FuncForPC(pc[1] - 1)
+	osPath, _ := os.Getwd()
+	_, fn, line, _ := runtime.Caller(1)
+	fn = strings.TrimPrefix(fn, osPath)
+
 	return &Algoritam{
-		Name:     name,
-		Previous: previous,
-		First:    first,
+		Name:             name,
+		Previous:         previous,
+		First:            first,
+		creationCodeLine: fmt.Sprintf("----------ii %s %d, %s", fn, line, fk.Name()),
 	}
 }
 
@@ -160,21 +173,19 @@ func (a *Algoritam) checkName(newElement interface{}) error {
 		elementName = m.GetName()
 	}
 
-	newElementType := a.getElemenType(newElement)
-
 	for _, v := range a.Elements {
 		switch m := v.(type) {
 		case *BlockStruct:
 			if m.GetName() == elementName {
-				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+				return fmt.Errorf(`error: element with the name "%s" already exist, created on the location: %s`, elementName, m.creationCodeLine)
 			}
 		case *Romboid:
 			if m.GetName() == elementName {
-				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+				return fmt.Errorf(`error: element with the name "%s" already exist, created on the location: %s`, elementName, m.creationCodeLine)
 			}
 		case *EndStruct:
 			if m.GetName() == elementName {
-				return fmt.Errorf("error: element with the name %s already exist (type: %s)", elementName, newElementType)
+				return fmt.Errorf(`error: element with the name "%s" already exist, created on the location: %s`, elementName, m.creationCodeLine)
 			}
 		}
 	}
